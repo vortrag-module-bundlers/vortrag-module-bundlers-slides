@@ -1,7 +1,7 @@
-import React from 'react';
-import { render } from 'react-dom';
+import React from "react";
+import { render } from "react-dom";
 
-import { MDXProvider } from '@mdx-js/react';
+import { MDXProvider } from "@mdx-js/react";
 
 import {
   Deck,
@@ -11,14 +11,12 @@ import {
   Progress,
   FullScreen,
   Notes,
-  mdxComponentMap
-} from 'spectacle';
-
+  mdxComponentMap,
+} from "spectacle";
 
 // SPECTACLE_CLI_MDX_START
-import slides, { notes } from './slides.mdx';
+import slides, { notes } from "./slides.mdx";
 // SPECTACLE_CLI_MDX_END
-
 
 // SPECTACLE_CLI_THEME_START
 const theme = {};
@@ -59,4 +57,4 @@ const Presentation = () => (
   </MDXProvider>
 );
 
-render(<Presentation />, document.getElementById('root'));
+render(<Presentation />, document.getElementById("root"));

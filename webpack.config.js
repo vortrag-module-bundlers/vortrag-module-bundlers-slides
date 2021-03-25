@@ -54,6 +54,10 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
         type: "asset",
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   // Default for boilerplate generation.

@@ -6,19 +6,39 @@ export const testProp = 50;
 
 ---
 
-# Wofür benötigt man einen Module Bundler?
+## Wofür ein Module Bundler?
+
+Ein Module Bundler wird in der Entwicklung einer Webanwendung benötigt, da Browser traditionell kein Modulsystem unterstützen
+(heute nicht mehr korrekt - später). 
+
+Das bedeutet, ein Entwickler müsste sich selbst von Hand darum kümmern, alle benötigten Codedateien zu laden. 
 
 ---
 
-# Wie laden Webbrowser traditionell Assets?
+## Wie laden Webbrowser traditionell JavaScript Dateien?
+
+Der normale Weg, eine JavaScript Datei zu laden, ist durch den ```<script>``` Tag. 
+
+```html
+<body>
+  <div>The normal content</div>
+
+  <!--
+    Dabei werden die Tags in der Reihenfolge verarbeitet, in der sie im Dokument stehen. 
+    Eine Möglichkeit, Abhängigkeiten in den JavaScript Dateien auszuwerten, existiert auf dieser Ebene nicht. 
+  -->
+  <script src="script1.js"></script>
+  <script src="script2.js"></script>
+</body>
+```
 
 ---
 
-# Wie kann ein Entwickler Abhängiogkeiten in einem Projekt auflösen?
+# Wie kann ein Entwickler Abhängigkeiten in einem Projekt verwalten?
 
 ---
 
-# Manuell
+## Manuell
 
 ```html
 <body>
@@ -36,7 +56,7 @@ export const testProp = 50;
 </body>
 ```
 
-Disclaimer: So habe ich tatsächlich angefangen Webanwendungen zu schreiben.
+Disclaimer: So habe ich tatsächlich damals angefangen, Webanwendungen zu schreiben.
 
 ---
 
@@ -63,37 +83,38 @@ Kontrolle ...
 
 ---
 
-# Globaler Namespace
+### Globaler Namespace
 
-Eine weitere Herausforderung von Importen via Script-Tags ist, standardmäßig wird alles aus der importierten Datei dem globalen Namespace hinzugefügt.
+Eine weitere Herausforderung von Importen via Script-Tags ist, standardmäßig wird der Inhalt der geladenen Datei dem globalen Namespace hinzugefügt. 
+Skripte können sich also gegenseitig Dinge "zerstören", das zuletzt geladene Skript "gewinnt".
 
 Das Problem kann über sogenannte [IIFE](https://developer.mozilla.org/de/docs/Glossary/IIFE) teilweise gelöst werden.
 
 ---
 
-# Module Bundler
+## Module Bundler
 
-Um die Schwierigkeiten mit manuellen Importen zu beheben, wurden ab 2011 sogenannte Module Bundler wie [browserify](http://browserify.org/) oder [webpack](https://webpack.js.org/) entwickelt.
+Um die Schwierigkeiten mit manuellen Importen immer komplexer werdenden Anwendungen zu beheben, wurden ca. ab 2011 sogenannte Module Bundler 
+wie [browserify](http://browserify.org/) oder [webpack](https://webpack.js.org/) entwickelt.
 
 Diese Tools ermöglichen den Entwicklern, Code modular zu schreiben.
-Das Auflösen der Abhängigkeiten und der Zusammenbau von Quelldateien in ein für Browser verständliches Format wird von diesen Tools übernommen.
+Das Auflösen von Abhängigkeiten und die Konvertierung von Quelldateien in ein für Browser verständliches Format wird von diesen Tools übernommen.
 
 ---
 
-# ECMAScript Module
+## ECMAScript Module
 
 [Moderne Browser](https://caniuse.com/es6-module) implementieren ein eigenes Modulsystem, genannt [ES Module](https://developer.mozilla.org/de/docs/Web/JavaScript/Guide/Modules).
-
-Dieses ermöglich es Entwicklern, modulare Code zu schreiben und diesen unverändert in Browsern auszuführen.
-Der Browser selbst kümmert sich darum, alle Anhängigkeiten korrekt zu laden.
+Dieses ermöglich es Entwicklern, modularen Code zu schreiben und diesen unverändert in Browsern auszuführen.
+Dieser kümmert sich selbst darum, alle Anhängigkeiten korrekt zu laden.
 
 Damit entfällt - _theoretisch_ - die Notwendigkeit einen Bundler einzusetzen.
 
 ---
 
-# Buildless
+### Buildless
 
-Tatsächlich kann man heutzutage kleinere Projekte, die nur auf moderne Browser abzielen, ohne einen eigenen Buildprozess entwickeln.
+Tatsächlich kann man heutzutage kleinere Projekte, die auschließlich auf moderne Browser abzielen, ohne eigenen Buildprozess entwickeln.
 
 Diese Art der Webentwicklung wird unter dem Begriff [buildless](https://buildless.site/) zusammengefasst.
 
@@ -101,7 +122,7 @@ Diese Art der Webentwicklung wird unter dem Begriff [buildless](https://buildles
 
 # Aufgaben eines Module Bundlers heute
 
-In der Praxis stößt man bei größeren Projekten (also alles was wir so machen) relativ schnell an technische Grenzen, wenn man komplett auf einen Buildprozess verzichtet.
+In der Praxis stößt man bei größeren Projekten (read: alles was wir so machen) relativ schnell an technische Grenzen, wenn man komplett auf einen Buildprozess verzichtet.
 
 Daher ist auch heutzutage der Einsatz eines Module Bundlers und einer Build-Pipeline meistens sinnvoll.
 
@@ -109,47 +130,49 @@ Daher ist auch heutzutage der Einsatz eines Module Bundlers und einer Build-Pipe
 
 ## Module Resolution
 
-Unter module resolution versteht man das Auflösen der Abhängigkeiten aller Quellcode Dateien untereinander.
+Unter module resolution versteht man das Auflösen der Abhängigkeiten aller Codedateien untereinander.
 Dabei wird ein sog. Abhängigkeitsbaum aufgebaut und damit die korrekte Ladereihenfolge aller Dateien sichergestellt.
 
-So ist jede abhängige Datei bereits geladen, sobald sie benötigt wird und der Entwickler muss das nicht mehr manuell machen (dependency hell).
+So ist jede abhängige Datei bereits geladen, sobald sie benötigt wird und ein Entwickler verwaltet das nicht mehr manuell (dependency hell).
 
 ---
 
 ## Transpile
 
-Unter den Begriff Tanspilierung versteht man das Übersetzen einer Quelldatei von einer Hochsprache in eine andere Hochsprache.
+Unter den Begriff Tanspilierung versteht man allgemein das Übersetzen einer Quelldatei von einer Hochsprache in eine andere Hochsprache.
 
-Der Unterschied zu Kompilierung ist, dass dort eine Hochsprache (z.B. C++) in Maschinencode übersetzt wird.
+Der Unterschied zu Kompilierung ist, dort wird eine Hochsprache (z.B. C++, Java) in Maschinen- oder Bytecode übersetzt.
 
 ---
 
 ## Transpile
 
-Heutzutage gibt es viele Sprachen, die auf die Web-Basistechnologien (HTML, CSS, JavaScript) aufsetzten und diese um neue Möglichkeiten erweitern.
+Heutzutage gibt es viele Programmiersprachen, die auf Web-Basistechnologien (HTML, CSS, JavaScript) aufsetzten und diese um neue Möglichkeiten erweitern.
 Beliebte Beispiele hierfür sind z.B. TypeScript (JavaScript), SASS und PostCSS (CSS) oder Pug (HTML).
 
-Viele Module Bundler bieten Unterstützung für diese Sprachen und übernehmen die Übersetzung in HTML, CSS und JavaScript automatisch.
+Viele Module Bundler bieten Unterstützung für diese Sprachen und übernehmen die Übersetzung in die entsprechenden _Web-Sprachen_ automatisch.
 
 ---
 
 ## Bundle
 
-Der Bundle Schritt, der diesen Tools ihren Namen gibt, ist das Bündeln der einzelnen Quelldateien in eines oder wenige Code-Pakete.
+Der Bundle Schritt, der diesen Tools ihren Namen gibt, ist das Bündeln der einzelnen Quelldateien in ein oder wenige Code-Pakete.
 
-Um den Browser und das Netzwerk nicht mit dem Herunterladen hunderter oder tausender einzelner Datein zu belasten, werden diese zu wenigen großen Dateien zusammengefasst.
+Um Browser und Netzwerk nicht mit dem Herunterladen hunderter oder tausender einzelner Dateien zu belasten, werden diese zu wenigen großen Dateien zusammengefügt.
 
 ---
 
-## Statische Assets verwalten
+## Statische Assets
 
-Statische Assets wie Bilder, JSON oder Manifest Dateien oder ähnliche Dateien, die nicht direkt weiterverarbeitet werden, sind ebenfalls Teil des Build-Prozesses.
+Statische Assets wie Bilder, JSON, Manifeste oder ähnliche Dateien, die nicht direkt weiterverarbeitet werden, sind ebenfalls Teil des Build-Prozesses.
 
-Der Module Bundler ist dafür verantwortlich, diese in den endgültigen Build abzulegen und auszuliefern.
+Ein Module Bundler ist dafür verantwortlich, diese in den endgültigen Build abzulegen und auszuliefern.
 
 ---
 
 ## Development Tooling
+
+Um Entwicklern die tägliche Arbeit zu erleichtern, bieten Bundler hierfür oft spezielles Tooling:
 
 - Dev server
 - Source maps
@@ -159,10 +182,10 @@ Der Module Bundler ist dafür verantwortlich, diese in den endgültigen Build ab
 
 ## Production Build Optimierungen
 
-Während der Development Build sich vor allem darauf konzentriert, den Entwicklern die Arbeit zu erleichtern,
-ist die Aufgabe des Production Builds, die Anwendung für den Betrieb auf den Zielplattformen (den unterstützten Browsern) zu optimieren.
+Während der Development Build sich vor allem darauf konzentriert, Entwicklern die Arbeit zu erleichtern,
+ist die Aufgabe des Production Builds, Anwendungen für den Betrieb auf den Zielplattformen, also unterstützten Browsern zu optimieren.
 
-Hierfür gibt es mehrere Schritte im Build, die während der Entwicklung üblicherweise weggelassen werden.
+Hierfür werden mehrere Schritte im Build durchlaufen, die während der Entwicklung üblicherweise weggelassen werden.
 
 ---
 
@@ -171,13 +194,13 @@ Hierfür gibt es mehrere Schritte im Build, die während der Entwicklung üblich
 Der gebaute Quellcode wird in diesem Schritt durch ein Programm geschickt, das die Codemenge möglichst reduzieren soll.
 Zu diesem Zweck wird aller unnnötiger Whitespace entfernt, Variablennamen gekürzt oder Kommentare entfernt.
 
-Ziel ist, die über das Netzwerk zu übertragende Menge an Bytes zu klein wie möglich zu halten.
+Ziel ist, die über das Netzwerk zu übertragende Menge an Bytes so klein wie möglich zu halten.
 
 ---
 
 ### Minification
 
-Ein angenehmer Nebeneffekt ist, dass der Ergebniscode schlechter lesbar ist, also viel schwerer von Konkurrenten "ausgeliehen" werden kann.
+Ein angenehmer Nebeneffekt ist - der Ergebniscode ist schlechter lesbar, kann also viel schwerer von Konkurrenten "ausgeliehen" werden.
 
 ```javascript
 // vorher
@@ -189,7 +212,7 @@ const helloWorld = (firstName, lastName) => {
   return `Hello world ${firstName} ${lastName}`;
 };
 
-// von https://terser.org/ geparst
+// nachher - von https://terser.org/ geparst
 const hello=(l,o)=>`Hello ${l} ${o}`,helloWorld=(l,o)=>`Hello world ${l} ${o}`;
 ```
 
@@ -197,13 +220,13 @@ const hello=(l,o)=>`Hello ${l} ${o}`,helloWorld=(l,o)=>`Hello world ${l} ${o}`;
 
 ### Tree shaking
 
-Unter tree shaking versteht man das gezielte Entfernen nicht genutzen Codes aus dem Build. 
+Unter tree shaking versteht man das gezielte Entfernen nicht genutzen Codes aus einzelnen Dateien. 
 
 Beispiel:
 In einer Codedatei sind drei Funktionen f1, f2 und f3 definiert. 
 In der eigentlichen Anwendung wird aus dieser Datei jedoch nur die Funktion f2 importiert und verwendet. 
 
-In Dev Build wird die Datei als Ganzes importiert, im Prod Build werden die Funktionen f1 und f3 entfernt und nicht ausgeliefert. 
+Der Production Build wird die Funktionen f1 und f3 entfernen und nicht mit ausliefern. 
 
 
 ---
@@ -211,10 +234,10 @@ In Dev Build wird die Datei als Ganzes importiert, im Prod Build werden die Funk
 ### Code splitting
 
 Code splitting stellt das Gegenteil zum Bundle Schritt dar. Viele einzelne Dateien auszuliefern ist nicht effizient, 
-den gesamten Code in eine einzige Datei zu packen jedoch auch. 
+den gesamten Code in eine einzige Datei "zu packen" jedoch auch nicht. 
 
-So werden manche Teile des Codes oft nur an wenigen Stellen der Anwendung benötigt. Diese immer zu laden, obwohl der Benutzer 
-diese Teile der Anwendung gar nicht nutzt, verzögert das initiale Laden der Anwendung und verursacht unnötigen Netzwerkverkehr. 
+So werden manche Teile der Codebasis nur an wenigen Stellen einer Anwendung benötigt. Diese immer zu laden, obwohl ein Kunde 
+diese Teile der Anwendung gar nicht nutzt, verlangsamt die Anwendung und verursacht unnötigen Netzwerkverkehr. 
 
 ---
 
@@ -230,7 +253,7 @@ bei Bedarf zu laden.
 Eine beleibte Methode stellen die sog. dynamischen Importe mit Hilfe der `import` Funktion dar, siehe z.B. [hier](https://2ality.com/2017/01/import-operator.html).
 
 Inzwischen ist auch die [native Unterstützung](https://caniuse.com/es6-module-dynamic-import) von dynamischen Importen in den meisten Browsern angekommen, 
-die nicht mehr auf Bundler angewiesen sind. 
+die so nicht mehr auf Bundler angewiesen sind. 
 
 ---
 
@@ -239,16 +262,16 @@ die nicht mehr auf Bundler angewiesen sind.
 Sollte das Projekt noch legacy Browser (IE) unterstützen müssen, gibt es zwei Strategien:
 
 - Der Prod Build generiert ein Ergebnis, das von allen Browsern verstanden wird.
-- Es werden zwei (oder mehr) Varianten der Anwendung gebaut, eine für die modernen Plattformen, eine für ... den IE.
+- Es werden zwei Varianten der Anwendung gebaut, eine für moderne Plattformen, eine für ... den IE.
 
 ---
 
 ### Optimierte Builds für moderne und legacy Browser
 
-Variante zwei hat den Vorteil, dass für moderne Browser optimierter Code meistens kleiner ist (minify) und von den JavaScript 
-Engines oft schneller ausgeführt wird. 
+Die zweite Variante hat Vorteile: Für moderne Browser optimierter Code ist meistens kleiner (minify) und wird von den JavaScript 
+Engines oft performanter ausgeführt. 
 
-Es werden also nicht alle Kunden "bestraft", sondern nur die wenigen mit alten Browsern. 
+So werden also nicht alle Kunden "bestraft", sondern nur die wenigen mit alten Browsern. 
 
 ---
 
@@ -270,12 +293,16 @@ class Person {
 
 ---
 
-... wird z.B. vom Babel Transpiler in diesen Code umgewandelt, 
+... wird z.B. vom Babel Transpiler in diesen Code umgewandelt
 
 ```javascript
 'use strict';
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { 
+  var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; 
+  if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } 
+  return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); 
+  if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -298,14 +325,14 @@ var Person = function () {
 }();
 ```
 
-den auch ein IE versteht, das kommt also beim Kunden an. 
+den auch ein IE versteht!
 
 ---
 
 ### Sicherheit und Build-Integrität
 
 Auch das Thema Sicherheit ist beim Ausliefern von Webanwendungen ein wichtiger Punkt. 
-Ein beliebter Angriffspunkt ist z.B. die Manipulation der ausgelieferten JavaScripts auf einem CDN. 
+Ein beliebter Angriffspunkt ist z.B. die Manipulation des ausgelieferten JavaScripts auf einem CDN. 
 
 Es ist schwer, in einem transpilieren und komprimierten Paket etwaige Manipulationen zu erkennen. 
 
@@ -316,18 +343,16 @@ Es ist schwer, in einem transpilieren und komprimierten Paket etwaige Manipulati
 Moderne Browser bieten gegen diesen Angriff einen Schutz durch die sog. 
 [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity). 
 
-Direkt in der Webseite, die diese JavaScript Dateien lädt, wird eine Checksumme dieser Datei hinterlegt. 
-Passt diese nicht auf die geladene Datei, wird diese sofort verworfen und nicht ausgeführt. 
-Webpack zum Beispiel kann diese Checksummen automatisiert während des Builds generieren und ablegen. 
-
-
-
+Direkt in der Webseite, welche JavaScript Dateien lädt, wird eine Checksumme für jede Datei hinterlegt. 
+Passt diese nicht zur geladene Datei, wird sie sofort verworfen und nicht ausgeführt. 
+Webpack beispielsweise kann diese Checksummen automatisiert während des Builds generieren. 
 
 ---
 
 ### Bau einer PWA
 
 Auch der Bau einer PWA (Progressive Web App), kann durch ein Buildtool sehr erleichter werden. 
+
 Sowohl das aufwendige Generieren eines [Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)
 als auch der benötigten Manifest Datei kann automatisiert werden.
 
@@ -347,21 +372,91 @@ Die besondere Stärke von webpack liegt in der extremen Konfigurierbarkeit und E
 <Quote>You can configure that in ...</Quote>
 <Quote>We have a plugin for that!</Quote>
 
-Default answers for webpack questions on stackoverflow 😉. 
+Default answers for webpack questions on Stackoverflow 😉. 
 
 ---
 
 ## Stärken von webpack
 
-Webpack bietet Unterstützung für praktisch jeden Browser (bis hinunter zu IE8) und jede noch so exotische Technologie. 
+Webpack bietet Unterstützung für praktisch jeden Browser (bis hinunter zum IE8) und jede noch so exotische Technologie. 
 
-Diese Folien wurden zum Beispiel mit Markdown geschrieben und von einem Webpack Plugin in das HTML umgewandelt, das jetzt zu sehen ist. 
+Als Beispiel, diese Folien wurden in Markdown geschrieben und von einem Webpack Loader in das HTML umgewandelt, das hier zu sehen ist. 
 
 ---
 
-## TODO webpack Konzepte
+## Webpack Konzepte
 
-Entry, Output, Mode, Loader, Plugin
+Webpack liegen einige grundlegende Konzepte zugrunde, auf die ich kurz eingehen möchte.
+
+---
+
+### Entry
+
+Ein Entry (Einstiegspunkt) bezeichnet in webpack den Beginn eines Abhängigkeitsbaumes. 
+Alles was diese Datei importiert, wird rekursiv aufgelöst und von Webpack in ein Paket geschnürt. 
+
+Man kann einen oder auch mehrere Einstiegspunkte definieren, aus denen webpack dann jeweils einen einen Baum errechnet. 
+
+---
+
+### Output
+
+In Output wird konfiguriert wo und in welcher Form die geschnürten Pakete abgelegt werden. 
+
+Hier wird beispielsweise das Ausgabeverzeichnis oder die generierten Dateinamen (optional mit Content-Hashes) festgelegt.
+
+---
+
+### Mode
+
+Der Mode, entweder _development_ oder _production_, legt das grundsätzliche Verhalten des Buildvorgangs fest. 
+
+So wird in _production_ zum Beispiel auf den Code Operationen wie tree shaking, minification etc. angewendet. 
+Diese müssen nicht einzeln konfiguriert werden (können aber), sondern werden über diesen zentralen Schalter gesteuert. 
+
+---
+
+### Loader
+
+Standardmäßig kann webpack ausschließlich JavaScript Dateien und seit Version 5 statische Assets verarbeiten. Die Unterstützung aller weiteren Dateitypen muss über sogenannte Loader
+nachgerüstet werden. 
+
+---
+
+### Loader
+
+So besteht eine Loader Konfiguration immer aus einem regulären Ausdruck, der eine oder mehrere Dateiendungen beschreibt 
+
+(z.B. ```/\.tsx?$/``` für .ts und .tsx Dateien) 
+
+und dem Namen eines Loaders, für .tsx Dateien zum Beispiel ```ts-loader```, der TypeScript Dateien verarbeiten kann. 
+
+---
+
+### Loader
+
+Es ist ebenfalls möglich, Loader hintereinander zu schalten und jeden einzeln zu konfigurieren. 
+
+Eine übliche Kombination ist z.B. SASS Dateien erst durch den sass-loader in CSS umzuwandeln 
+und dieses Zwischenergebnis danach durch den postcss-loader weiter zu verarbeiten. 
+
+---
+
+### Plugin
+
+Während ein Loader immer auf bestimmen Dateitypen arbeitet, ist ein Plungin breiter angeelgt und kann an beliebigen Stellen im Build Prouzess eingreifen. 
+
+Plugins sind in webpack das mächtigste Werkzeug und stellen vom Definieren von Umgebungsvariablen oder Nachrichten bei Build Fehlern über die 
+Minifizierung bis zur Analyse des Buildergebnisses alle erweiterten Funktionen bereit. 
+
+---
+
+### Plugin
+
+Schon die [offizielle Liste](https://webpack.js.org/plugins/) der von webpack selbst verwalteten Plugins ist lang, die von der Community gepflegten ist noch wesentlich umfangreicher. 
+
+Eine Suche nach _webpack-plugin_ in der NPM Registry liefert [über 300 Seiten](https://www.npmjs.com/search?q=webpack-plugin) Ergebnisse. 
+Mir persönlich ist bislang kein Use Case untergekommen, für den es nicht einen webpack Plugin gab. 
 
 ---
 
@@ -377,25 +472,36 @@ Entry, Output, Mode, Loader, Plugin
 
 # Snowpack
 
-Snowpack ist ein relativ junges Projekt (Version 1.0 Januar 2020), das im Gegensatz zu webpack im Kern auf ES Modulen aufbaut.
+Snowpack ist ein relativ junges Projekt (Version 1.0 Januar 2020), das im Kern fest auf ES Modulen aufbaut.
 
-Damit überlässt Snowpack den (modernen) Browsern selbst die Aufgabe, Abhängigkeeiten aufzulösen und die Ladereihenfolge zu bestimmen und übernimmt nur Aufgaben wie das Transpilieren oder das Bereitstellen eines Dev Servers.
+Damit überlässt Snowpack den (modernen) Browsern selbst die Aufgabe, den Abhängigkeitsbaum aufzubauen und die Ladereihenfolge zu bestimmen und übernimmt "_nur_" Aufgaben wie das Transpilieren von z.B. TypeScript oder das Bereitstellen eines Dev Servers.
 
 ---
 
 # Snowpack
 
-Dieser Verzicht auf die Unterstützung von legacy Browsern (auch hierfür gibt es eine Lösung, auf die ich später eingehe), ermöglicht es Snowpack den Build Schritt komplett zu überspringen.
+Durch den Verzicht auf die Unterstützung von legacy Browsern (stimmt nur teilweise, dazu später mehr), kann Snowpack den Build Schritt komplett überspringen.
 
-Dies bringt besonders während der Entwicklung enorme Vorteile.
+Dies bringt besonders während der Entwicklungsphase enorme Vorteile.
+
+---
+
+<FlexBox alignContent="center" justifyContent="center" height="100%">
+  <Image
+    src="https://media.giphy.com/media/LfT85xyPFiGrK/source.gif"
+    alt="Fast"
+    height="50%"
+  />
+</FlexBox>
 
 ---
 
 ## Snowpack in Dev
 
-Während der Entwicklung kommt es zu praktisch zu keinen merklichen Buildzeiten, da immer nur die eine geänderte Datei gebaut und an den Browser gesendet wird. Der Rest liegt dort ohnehin bereits im Cache.
+Während der Entwicklung kommt es zu praktisch keinen merklichen Buildzeiten, da immer nur die eine eben geänderte Datei neu gebaut und an den Browser gesendet wird. 
+Der Rest liegt dort ohnehin bereits im Cache.
 
-Dies gilt auch und besonders für größere, gewachsene Projekte, wo Tools wie webpack mit jeder neu hinzugefügten Datei ein kleines bisschen langsamer werden.
+Dies gilt auch und besonders für größere, gewachsene Projekte, indenen Bundler wie webpack mit jeder neu hinzugefügten Datei ein _kleines bisschen_ langsamer werden.
 
 ---
 
@@ -412,7 +518,7 @@ Dies gilt auch und besonders für größere, gewachsene Projekte, wo Tools wie w
 ## Vorteile von Snowpack
 
 - Sehr schneller Dev Build
-- Unterstützung für die gängigen Formate (TypeScript, JSX, SASS, CSS Module ...) fest eingebaut.
+- Unterstützung für alle gängigen Formate (TypeScript, JSX, SASS, CSS Module ...) fest eingebaut.
 - Wenig Konfiguration notwendig, viele Konventionen
 - Aktives Ökosystem an Erweiterungen (trotzdem kein Vergleich mit webpack)
 - Erweiterungen selbst zu entwickeln ist vergleichsweise einfach
@@ -423,7 +529,7 @@ Dies gilt auch und besonders für größere, gewachsene Projekte, wo Tools wie w
 
 - Keine native Unterstützung für legacy Browser (= IE)
 - Weniger Einstellmöglichkeiten - wenn man sie braucht
-- Deutlich kleines Ökosystem im Vergleich zu webpack
+- Deutlich kleineres Ökosystem im Vergleich zu webpack
 
 ---
 
@@ -449,10 +555,10 @@ Dies gilt auch und besonders für größere, gewachsene Projekte, wo Tools wie w
 
 ## Snowpack in Produktion
 
-Für den Produktionsbuild ermöglicht Snowpack, in den Buildprozess noch einen klassischen Bundler einzuhängen.
-Dieser übernimmt dann die Aufgaben wie minification, tree shaking oder Builds für legacy Browser.
+Für den Production Build ermöglicht Snowpack, an das Ende des Buildprozesses noch einen klassischen Bundler einzuhängen.
+Dieser übernimmt dann Aufgaben wie minification, tree shaking oder Builds für legacy Browser.
 
-Aktuell werden die Bundler esbuild (modern, extrem schnell, junges Projekt), webpack und rollup unterstützt.
+Aktuell werden die Bundler esbuild (modern, extrem schnell aber junges Projekt), webpack (inklusive Plugins) und rollup unterstützt.
 
 ---
 
@@ -461,4 +567,24 @@ Aktuell werden die Bundler esbuild (modern, extrem schnell, junges Projekt), web
 Durch die Kombination aus einem sehr schlanken und schnellen Entwicklungsprozess und der Mächtigkeit und Flexibilität von Webpack in Produktion,
 hat er gemeinsame Einsatz von Snowpack und webpack das Potential, auch in großen und komplexen Projekten erfolgreich zu sein.
 
-Für neu startende Projekte kann man durchaus den Einsatz von Snowpack in Betracht ziehen und bei Bedarf webpack für die Produktion ergänzen.
+Für neu startende Projekte würde ich inzwischen ernsthaft den Einsatz von Snowpack evaluieren und bei Bedarf webpack für die Produktion ergänzen.
+
+---
+
+# Folien und Quellcode
+
+Die Anwendung zur Darstellung der Folien und die zwei Beispielanwendungen zum Ausprobieren findet ihr unter 
+
+[https://github.com/vortrag-module-bundlers](https://github.com/vortrag-module-bundlers)
+
+---
+
+<FlexBox
+  alignContent="center"
+  justifyContent="center"
+  height="100%"
+>
+  <h1>Fragen?</h1>
+</FlexBox>
+
+
